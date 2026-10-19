@@ -713,10 +713,8 @@ export const checkCodexProviderStatus = Effect.fn("checkCodexProviderStatus")(fu
   const accountStatus = managedAuth
     ? { status: "ready" as const, auth: managedAuth, message: undefined }
     : accountProbeStatus(snapshot);
-  // Plan limits only exist for a ChatGPT login. Without one (API key, Bedrock,
-  // or a custom `model_provider`, which reports no account), Codex can still
-  // answer the usage read from a ChatGPT login saved in its home, which this
-  // instance's turns don't draw on.
+  // Codex can return a saved ChatGPT login's limits when a custom provider
+  // reports no account.
   const usageLimits =
     snapshot.account.account?.type !== "chatgpt"
       ? makeUnavailableUsageLimits({ checkedAt, reason: "unsupported" })
